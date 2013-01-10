@@ -1,0 +1,20 @@
+{
+    "name": "venpath/tipaltipayments",
+    "description": "Wrapper for the Tipalti SOAP API.  Forked from: https://github.com/kamil-zielinski/tipaltipayments",
+    "keywords": ["tipalti"],
+    "license": "Apache License 2.0",
+    "homepage": "https://github.com/Venpath/tipaltipayments",
+    "authors": [
+        {
+            "name": "VenPath, Inc",
+            "email": "support@venpath.net"
+        },
+        {
+            "name": "Steve Eakin",
+            "email": "steve@venpath.net"
+        }
+    ],
+    "require": {
+    }
+}
+

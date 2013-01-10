@@ -13,29 +13,29 @@ class SoapClient
 	 * var string
 	 */
 	protected $_wsdl;
-	
+
 	/**
 	 * Configuration object
 	 * var Config
 	 */
 	protected $_config;
-	
+
 	/**
 	 * SoapClient real object
 	 * var SoapClient
 	 */
 	protected $_client;
-	
-	
+
+
 	public function __construct()
 	{
 		$this->_client = new \SoapClient($this->_wsdl);
 		//parent::__construct($this->_wsdl);
 	}
-	
+
 	/**
 	 * Magic method that catches all method calls, adds encryption and returns result itself
-	 * 
+	 *
 	 * @param string $functionName
 	 * @param array $functionArguments First element should be EAT parameter in array (where key is parameter name),
 	 * 								   second element is array of other parameter
@@ -47,30 +47,34 @@ class SoapClient
 		if(isset($this->_idap)){
 			$arguments['idap'] = $this->_idap;
 		}
-		$arguments['timestamp'] = time();
-		
+		$arguments['timeStamp'] = time();
+
 		//parameter used as EAT "Encryption Additional Terms"
 		if(isset($functionArguments[0])){
+			if (!is_array($functionArguments[0])) {
+				$functionArguments[0] = array($functionArguments[0]);
+			}
+
 			$arguments = array_merge($arguments,$functionArguments[0]);
 		}
 
-		//generating a key param, encoding acording to documentation			
+		//generating a key param, encoding acording to documentation
 		$arguments["key"] = hash_hmac("sha256", implode($arguments), $this->_config['secretKey'], false);
-		
+
 		//other parameters without EAT
 		if(isset($functionArguments[1])){
 			$arguments = array_merge($arguments,$functionArguments[1]);
-		}		
+		}
 		//var_dump($arguments);
-		
+
 		$mainResult = $this->_client->$functionName($arguments);
-		//did not work, same as $this->__soapCall(); 
+		//did not work, same as $this->__soapCall();
 		//$mainResult = parent::__call($functionName,$arguments);
 		$resultName = $functionName.'Result';
 		//var_dump($mainResult->$resultName);
 		return $mainResult->$resultName;
 	}
-	
+
 	/**
 	 * Allows to get config in childern classes
 	 */
